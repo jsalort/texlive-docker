@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 MAINTAINER Julien Salort, julien.salort@ens-lyon.fr
 
 # Create the liveuser user
@@ -21,7 +21,7 @@ RUN apt update && \
     apt upgrade -y
 RUN echo Europe/Paris > /etc/timezone && \
     ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
-    apt install -y wget perl-modules-5.26 \
+    apt install -y wget perl-modules-5.30 \
                    make ghostscript vim-nox
 
 # Install TL
@@ -36,13 +36,13 @@ RUN wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
 
 # Run luaotfload
 
-RUN su - liveuser -c "PATH=/usr/local/texlive/2020/bin/x86_64-linux luaotfload-tool --update --force -vv"
+RUN su - liveuser -c "PATH=/usr/local/texlive/2021/bin/x86_64-linux luaotfload-tool --update --force -vv"
 
 # Set up liveuser
 
 USER "$USER_NAME"
 ENV HOME "$USER_HOME"
-ENV MANPATH "/usr/local/texlive/2020/texmf-dist/doc/man:${MANPATH}"
-ENV INFOPATH "/usr/local/texlive/2020/texmf-dist/doc/info:${INFOPATH}"
-ENV PATH "/usr/local/texlive/2020/bin/x86_64-linux:${PATH}"
+ENV MANPATH "/usr/local/texlive/2021/texmf-dist/doc/man:${MANPATH}"
+ENV INFOPATH "/usr/local/texlive/2021/texmf-dist/doc/info:${INFOPATH}"
+ENV PATH "/usr/local/texlive/2021/bin/x86_64-linux:${PATH}"
 WORKDIR "$USER_HOME"
