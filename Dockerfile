@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:21.04
 MAINTAINER Julien Salort, julien.salort@ens-lyon.fr
 
 # Create the liveuser user
@@ -21,14 +21,14 @@ RUN apt update && \
     apt upgrade -y
 RUN echo Europe/Paris > /etc/timezone && \
     ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
-    apt install -y wget perl-modules-5.30 \
+    apt install -y wget perl-modules-5.32 \
                    make ghostscript vim-nox
 
 # Install TL
 
 COPY texlive.profile /
 
-RUN echo 2021-06-14
+RUN echo 2021-12-07
 
 RUN wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
     tar -xzf install-tl-unx.tar.gz && \
