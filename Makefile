@@ -1,5 +1,5 @@
 all:
-	docker build -t jsalort/texlive:2021 .
+	docker buildx build --platform linux/arm64,linux/amd64 --tag jsalort/texlive:2021 --push .
 	docker tag jsalort/texlive:2021 jsalort/texlive:latest
 
 push:

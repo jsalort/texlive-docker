@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:21.04 AS base
 MAINTAINER Julien Salort, julien.salort@ens-lyon.fr
 
 # Create the liveuser user
@@ -7,6 +7,7 @@ ARG USER_NAME=liveuser
 ARG USER_HOME=/home/liveuser
 ARG USER_ID=1000
 ARG USER_GECOS=liveuser
+ARG TARGETARCH
 
 RUN adduser \
   --home "$USER_HOME" \
@@ -28,7 +29,7 @@ RUN echo Europe/Paris > /etc/timezone && \
 
 COPY texlive.profile /
 
-RUN echo 2021-12-07
+RUN echo 2022-02-02
 
 RUN wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
     tar -xzf install-tl-unx.tar.gz && \
@@ -36,15 +37,18 @@ RUN wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
     rm -fr install-tl-* && \
     rm texlive.profile
 
-# Run luaotfload
-
-RUN su - liveuser -c "PATH=/usr/local/texlive/2021/bin/x86_64-linux luaotfload-tool --update --force -vv"
-
-# Set up liveuser
-
 USER "$USER_NAME"
 ENV HOME "$USER_HOME"
 ENV MANPATH "/usr/local/texlive/2021/texmf-dist/doc/man:${MANPATH}"
 ENV INFOPATH "/usr/local/texlive/2021/texmf-dist/doc/info:${INFOPATH}"
+
+FROM base AS branch-amd64
+RUN PATH=/usr/local/texlive/2021/bin/x86_64-linux luaotfload-tool --update --force -vv
 ENV PATH "/usr/local/texlive/2021/bin/x86_64-linux:${PATH}"
+
+FROM base AS branch-arm64
+RUN PATH=/usr/local/texlive/2021/bin/aarch64-linux luaotfload-tool --update --force -vv
+ENV PATH "/usr/local/texlive/2021/bin/aarch64-linux:${PATH}"
+
+FROM branch-${TARGETARCH} AS final
 WORKDIR "$USER_HOME"
