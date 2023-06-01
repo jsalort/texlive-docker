@@ -10,6 +10,8 @@ push:
 	docker push jsalort/texlive:2023
 	docker push jsalort/texlive:latest
 
+test:
+	docker run -it --rm -v ${CURDIR}:/home/liveuser/workdir -w /home/liveuser/workdir jsalort/texlive:2023_intel pdflatex hello.tex
 arm:
 	# Building arm64 locally
 	docker build --platform arm64 -t jsalort/texlive:2023_arm64 .
