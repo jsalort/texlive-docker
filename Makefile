@@ -1,6 +1,6 @@
 all:
 	# Default is x86_64 because that is what we use on the VPS
-	docker build --platform x86_64 -t jsalort/texlive:2023_intel .
+	docker build --platform linux/amd64 -t jsalort/texlive:2023_intel .
 	docker tag jsalort/texlive:2023_intel jsalort/texlive:latest
 
 push:

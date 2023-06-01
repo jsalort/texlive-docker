@@ -46,10 +46,9 @@ FROM base AS branch-amd64
 RUN PATH=/usr/local/texlive/2023/bin/x86_64-linux luaotfload-tool --update --force -vv
 ENV PATH "/usr/local/texlive/2023/bin/x86_64-linux:${PATH}"
 
-# FROM base AS branch-arm64
-# RUN PATH=/usr/local/texlive/2023/bin/aarch64-linux luaotfload-tool --update --force -vv
-# ENV PATH "/usr/local/texlive/2023/bin/aarch64-linux:${PATH}"
+FROM base AS branch-arm64
+RUN PATH=/usr/local/texlive/2023/bin/aarch64-linux luaotfload-tool --update --force -vv
+ENV PATH "/usr/local/texlive/2023/bin/aarch64-linux:${PATH}"
 
-# FROM branch-${TARGETARCH} AS final
-# WORKDIR "$USER_HOME"
-WORKDIR "/home/liveuser"
+FROM branch-${TARGETARCH} AS final
+WORKDIR "$USER_HOME"
