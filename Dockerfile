@@ -1,11 +1,19 @@
-FROM ubuntu:22.04 AS base
+FROM ubuntu:23.10 AS base
 MAINTAINER Julien Salort, julien.salort@ens-lyon.fr
+
+RUN apt update && \
+    apt upgrade -y
+RUN echo Europe/Paris > /etc/timezone && \
+    ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
+    apt install -y wget perl-modules-5.36 \
+                   make ghostscript vim-nox \
+                   adduser
 
 # Create the liveuser user
 
 ARG USER_NAME=liveuser
 ARG USER_HOME=/home/liveuser
-ARG USER_ID=1000
+ARG USER_ID=1001
 ARG USER_GECOS=liveuser
 ARG TARGETARCH
 
@@ -16,20 +24,11 @@ RUN adduser \
    --disabled-password \
   "$USER_NAME"
 
-# TL dependencies and base tools
-
-RUN apt update && \
-    apt upgrade -y
-RUN echo Europe/Paris > /etc/timezone && \
-    ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
-    apt install -y wget perl-modules-5.34 \
-                   make ghostscript vim-nox
-
 # Install TL
 
 COPY texlive.profile /
 
-RUN echo 2023-05-31
+RUN echo 2023-10-31
 
 RUN wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
     tar -xzf install-tl-unx.tar.gz && \
